@@ -1,37 +1,33 @@
-import React, { useState, useEffect,} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import BleManager from 'react-native-ble-manager';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  NativeModules,
-  NativeEventEmitter,
-  Button,
-  Platform,
-  PermissionsAndroid,
-  FlatList,
-  TouchableHighlight,
-  SectionList,
+import React, {
+    useState,
+    useEffect,
+  } from 'react';
+  import {
+    SafeAreaView,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    NativeModules,
+    NativeEventEmitter,
+    Button,
+    Platform,
+    PermissionsAndroid,
+    FlatList,
+    TouchableHighlight,
+    SectionList,
 } from 'react-native';
-import Calender from './Calender';
-// import Ble from './Ble';
+import BleManager from 'react-native-ble-manager';
 
-function App(){
+const BleManagerModule = BleManager;
+const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-  const BleManagerModule = BleManager;
-  const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+const peripherals = new Map();
+const [list, setList] = useState([]);
+const [isScanning, setIsScanning] = useState(false);
 
-  const peripherals = new Map();
-  const [list, setList] = useState([]);
-  const [isScanning, setIsScanning] = useState(false);
-  const Stack = createNativeStackNavigator();
-
-  function startScan(){
+function startScan(){
 
     if(!isScanning){
         BleManager.scan([], 3, true).then((results) =>{
@@ -118,48 +114,7 @@ function testPeripheral(peripheral){
                 console.log('Connection error', error);
             });
         }
-      }
     }
+}
 
-  useEffect(()=>{
-    BleManager.start({showAlert: false});
-
-    bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
-    bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan);
-    bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
-    bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic);
-    
-    if(Platform.OS === 'android' && Platform.Version >= 23){
-      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then((result)=>{
-        if(result){
-          console.log("Permission is OK");
-        }else{
-          PermissionsAndroid.request(PermissionsAndroid.PermissionAndroid.ACCESS_FINE_LOCATION).then((result) =>{
-            if(result){
-              console.log("User accept");
-            }else{
-              console.log("User refuse");
-          }
-        });
-      }
-    });
-  }
-  return (() => {
-    console.log('unmount');
-    bleManagerEmitter.removeListener('BleManagerDiscoverPeripheral', handleDiscoverPeripheral);
-    bleManagerEmitter.removeListener('BleManagerStopScan', handleStopScan);
-    bleManagerEmitter.removeListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
-    bleManagerEmitter.removeListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic);
-  })
-},[]);
-
-  return (
-    <NavigationContainer>
-    <Stack.Navigator>
-        <Stack.Screen name = "Calender" component = {Calender}/>
-    </Stack.Navigator>
-    </NavigationContainer>
-  )
-};
-
-export default App;
+export default Ble;
