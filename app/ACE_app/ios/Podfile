@@ -19,6 +19,11 @@ target 'ACE_app' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
+
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   target 'ACE_appTests' do
     inherit! :complete
     # Pods for testing
