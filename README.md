@@ -1,4 +1,5 @@
 # 2022-1학기 한남대학교 CPD ACE
+![image](https://user-images.githubusercontent.com/42925746/175772342-09f480ea-8954-4c03-9dbc-ce7288658c55.png)
 
 ## 개요
 **한남대학교 Creative Product Design Project** <br/>
